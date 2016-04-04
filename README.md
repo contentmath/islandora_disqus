@@ -4,7 +4,6 @@
 
 The Islandora Disqus modules enables Disqus commenting on Islandora objects.
 
-
 ## Requirements
 
 This module requires the following modules/libraries:
@@ -12,7 +11,7 @@ This module requires the following modules/libraries:
 * [Islandora](https://github.com/islandora/islandora)
 * [Tuque](https://github.com/islandora/tuque)
 
-A Disqus account is also required, sign up at (https://disqus.com).
+A Disqus account is also required, sign up at [https://disqus.com](https://disqus.com).
 
 ## Installation
 
@@ -44,13 +43,9 @@ Need support or additional features or modifications?
 
 ## Maintainers/Sponsors
 
-Sponsored by:
-
-* [Content Math](https://www.contentmath.com)
-
 Current maintainers:
 
-* [Mitch MacKenzie](http://www.mitchmac.com)
+* [Mitch MacKenzie](https://www.contentmath.com)
 
 ## License
 
