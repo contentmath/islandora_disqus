@@ -1,0 +1,12 @@
+<?php
+
+/**
+ * @file
+ * Wrapper template for the Islandora Disqus block embed.
+ */
+
+?>
+<div id="islandora-disqus-display">
+  <div id="disqus_thread"></div>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>

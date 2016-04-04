@@ -1,0 +1,6 @@
+name = Islandora Disqus
+description = Enables Disqus commenting on Islandora objects.
+dependencies[] = islandora
+core = 7.x
+version = 7.x-dev
+package = Islandora Tools

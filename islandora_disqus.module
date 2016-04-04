@@ -1,0 +1,150 @@
+<?php
+
+/**
+ * @file
+ * Main module file for the Islandora Disqus module.
+ */
+
+/**
+ * Implements hook_block_info().
+ */
+function islandora_disqus_block_info() {
+  $blocks['islandora_disqus_display'] = array(
+    'info' => t('Islandora Disqus'),
+    'cache' => DRUPAL_CACHE_PER_PAGE,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function islandora_disqus_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'islandora_disqus_display':
+      $block['subject'] = '';
+      $block['content'] = islandora_disqus_render_display_block();
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function islandora_disqus_block_configure($delta = '') {
+  switch ($delta) {
+    case 'islandora_disqus_display':
+      return islandora_disqus_config_form();
+
+    default:
+      break;
+  }
+}
+
+/**
+ * Implements hook_block_save().
+ */
+function islandora_disqus_block_save($delta = '', $edit = array()) {
+  switch ($delta) {
+    case 'islandora_disqus_display':
+      variable_set('islandora_disqus_shortname', $edit['islandora_disqus_shortname']);
+      variable_set('islandora_disqus_visibility', $edit['islandora_disqus_visibility']);
+      break;
+
+    default:
+      break;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function islandora_disqus_theme($existing, $type, $theme, $path) {
+  return array(
+    'islandora_disqus_display' => array(
+      'template' => 'theme/islandora_disqus_display',
+    ),
+  );
+}
+
+/**
+ * Renders the Disqus block.
+ *
+ * @return array
+ *   Render array containing markup.
+ */
+function islandora_disqus_render_display_block() {
+  $default_visibility = variable_get('islandora_disqus_visibility', 1);
+  if (($default_visibility && islandora_disqus_display_visibility()) || !$default_visibility) {
+    $object = menu_get_object('islandora_object', 2);
+    if ($object && isset($object->id)) {
+      $args = arg();
+      // Disqus ID is the object ID.
+      $disqus_id = $object->id;
+      // Disqus URL is the object's
+      $disqus_url = $args[0] . '/' . $args[1] . '/' . $args[2];
+      drupal_add_js(
+        array(
+          'islandoraDisqus' => array(
+            'disqusId' => check_plain($disqus_id),
+            'disqusUrl' => url($disqus_url, array('absolute' => TRUE)),
+            'disqusShortname' => check_plain(variable_get('islandora_disqus_shortname', '')),
+          ),
+        ),
+        'setting'
+      );
+      drupal_add_js(drupal_get_path('module', 'islandora_disqus') . '/js/disqus.js');
+      return array(
+        '#markup' => theme('islandora_disqus_display'),
+      );
+    }
+  }
+}
+
+/**
+ * Determine if the user is viewing the Islandora object display.
+ *
+ * @return bool
+ *   Returns TRUE if the user is viewing the exact Islandora object callback
+ *   and returns FALSE otherwise or if the Disqus shortname is not configured.
+ */
+function islandora_disqus_display_visibility() {
+  $disqus_shortname = variable_get('islandora_disqus_shortname', '');
+  if (!empty($disqus_shortname)) {
+    $args = arg();
+    if (count($args) == 3 && $args[0] == 'islandora' && $args[1] == 'object') {
+      $object = menu_get_object('islandora_object', 2);
+      if (isset($object->id)) {
+        return TRUE;
+      }
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Add Disqus configuration form fields to the block configuration page.
+ *
+ * @return array
+ *   Form field array.
+ */
+function islandora_disqus_config_form() {
+  return array(
+    'islandora_disqus_shortname' => array(
+      '#type' => 'textfield',
+      '#title' => t('Disqus Shortname'),
+      '#description' => t('The Disqus shortname that uniquely identifies your account.'),
+      '#default_value' => variable_get('islandora_disqus_shortname', ''),
+      '#required' => TRUE,
+    ),
+    'islandora_disqus_visibility' => array(
+      '#type' => 'checkbox',
+      '#title' => t('Default visibility?'),
+      '#description' => t('If checked, the block will only appear on Islandora object displays in
+        combination with visibility settings configured below.'),
+      '#default_value' => variable_get('islandora_disqus_visibility', 1),
+    ),
+  );
+}
