@@ -41,13 +41,13 @@ Have an issue with the module?
 
 Need support or additional features or modifications?
 
-* [Content Math](http://www.contentmath.com/articles/2016/4/2/islandora-disqus-commenting)
+* [Content Math](http://www.contentmath.com)
 
 ## Maintainers/Sponsors
 
 Current maintainers:
 
-* [Mitch MacKenzie](https://www.contentmath.com)
+* [Mitch MacKenzie](http://www.contentmath.com)
 
 ## License
 
